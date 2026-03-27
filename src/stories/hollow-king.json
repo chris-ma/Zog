@@ -1,0 +1,179 @@
+{
+  "id": "hollow-king",
+  "slug": "hollow-king",
+  "title": "The Hollow King",
+  "description": "A dying kingdom. A king who has lost his soul. Only you can decide whether his realm will be saved — or consumed by the creeping dark.",
+  "genre": ["fantasy", "mystery"],
+  "artStyle": "dark fantasy oil painting, dramatic chiaroscuro lighting, rich jewel tones",
+  "mood": "foreboding",
+  "estimatedMinutes": 15,
+  "coverImageUrl": null,
+  "rootNodeId": "node-throne-room",
+  "isDynamic": false,
+  "theme": {
+    "primaryColor": "#8b5cf6",
+    "backgroundColor": "#0a0a0f",
+    "fontFamily": "Cinzel, serif"
+  },
+  "nodes": [
+    {
+      "id": "node-throne-room",
+      "storyId": "hollow-king",
+      "title": "The Throne of Silence",
+      "prose": "The throne room of Ashenveil has not heard laughter in three years. You stand at its threshold, boots whispering against cold obsidian tiles, as torchlight gutters in a wind that comes from nowhere. On the dais sits the Hollow King — Maerek the Undying — his crown tilted, his eyes two coins of tarnished silver.\n\nHis court is gone. His heralds fled. Only the sound of your breathing disturbs the cathedral quiet.\n\nA herald's voice, conjured from some enchantment in the walls, announces your name with hollow ceremony. The king's silver eyes drift toward you — not with hope, but with the dim recognition of a man half-submerged.\n\n\"Seeker,\" he rasps, and his voice is the creak of a gallows rope. \"They said you might come. Tell me — do you arrive to save a king, or to finish what the dark began?\"",
+      "imagePrompt": "A vast gothic throne room lit by guttering torches, obsidian floor tiles reflecting orange flames, a pale gaunt king in a crooked crown seated on a throne of black stone, shadows pooling like water around the dais, dark fantasy oil painting style with dramatic chiaroscuro lighting",
+      "cachedImageUrl": null,
+      "isTerminal": false,
+      "endingType": null,
+      "choices": [
+        {
+          "id": "choice-pledge-service",
+          "text": "\"I am here to serve, Your Majesty. Tell me what must be done.\"",
+          "nextNodeId": "node-the-bargain",
+          "consequence": "Gain the king's cautious trust."
+        },
+        {
+          "id": "choice-demand-truth",
+          "text": "\"I want the truth first. What happened to your soul?\"",
+          "nextNodeId": "node-the-confession",
+          "consequence": "A dangerous question — but knowledge is power."
+        },
+        {
+          "id": "choice-silent-observation",
+          "text": "Say nothing. Watch him. Let the silence do the work.",
+          "nextNodeId": "node-the-confession",
+          "consequence": "Sometimes stillness reveals what words conceal."
+        }
+      ]
+    },
+    {
+      "id": "node-the-bargain",
+      "storyId": "hollow-king",
+      "title": "The King's Bargain",
+      "prose": "The Hollow King rises with the grinding effort of a man lifting mountains. He descends the dais steps one at a time, silver eyes fixed on yours, until he stands close enough that you smell candle wax and old grief.\n\n\"My soul,\" he says, \"was taken by the Archivore — a creature that feeds on essence rather than flesh. It dwells in the Sunken Library beneath the east wing. Three scholars went to retrieve it. None returned.\"\n\nHe produces a key from within his robes: iron, long as your palm, carved with sigils that pulse like a slow heartbeat.\n\n\"This opens the Library's sealed antechamber. Within you will find my soul imprisoned in a phylactery of black glass. Destroy the container and free what is mine.\" He pauses. \"But know this — the Archivore will offer you something in exchange for leaving. It always does. Whatever it promises, it lies.\" His silver gaze sharpens. \"Will you go?\"",
+      "imagePrompt": "A gaunt pale king in a crooked crown descending stone steps toward the viewer, holding an iron key covered in glowing sigils, dark gothic castle interior, candlelight casting long dramatic shadows, dark fantasy oil painting chiaroscuro style, rich jewel tones",
+      "cachedImageUrl": null,
+      "isTerminal": false,
+      "endingType": null,
+      "choices": [
+        {
+          "id": "choice-accept-bargain",
+          "text": "Take the key. \"I will return with your soul.\"",
+          "nextNodeId": "node-sunken-library",
+          "consequence": "Descend into the dark."
+        },
+        {
+          "id": "choice-negotiate",
+          "text": "\"What do I receive in return for this risk?\"",
+          "nextNodeId": "node-sunken-library",
+          "consequence": "Press for a reward before descending."
+        }
+      ]
+    },
+    {
+      "id": "node-the-confession",
+      "storyId": "hollow-king",
+      "title": "What the King Confessed",
+      "prose": "The silence stretches like taffy between you. The Hollow King does not look away. When he finally speaks, it is barely above a whisper.\n\n\"I invited it,\" he says. \"The Archivore. Three winters past, when the grain stores failed and the plague crept up from the southern marshes, I sought any power that might save my people.\" He closes his eyes. \"It answered. It said it would drive the plague back — in exchange for a memory. Just one. A small thing.\"\n\nHis jaw tightens.\n\n\"It took the memory of my daughter's face. Then my wife's laugh. Then the warmth of sunlight. Memory by memory, it stripped me to this.\" He gestures at himself — the hollow eyes, the still chest, the too-pale skin. \"I am a king-shaped outline where a man used to be. The plague is gone. My kingdom survives. But I…\"\n\nHe finally meets your gaze. \"I need someone to go below. To take it back. Will you?\"",
+      "imagePrompt": "A sorrowful hollow-eyed king in dim candlelight confessing a terrible secret, shadows deep and dramatic, his crown askew, dark gothic architecture around him, dark fantasy chiaroscuro oil painting, rich dark jewel tones",
+      "cachedImageUrl": null,
+      "isTerminal": false,
+      "endingType": null,
+      "choices": [
+        {
+          "id": "choice-show-mercy",
+          "text": "\"You made a terrible choice. But I will help you.\"",
+          "nextNodeId": "node-sunken-library",
+          "consequence": "Compassion opens unexpected doors."
+        },
+        {
+          "id": "choice-judge-him",
+          "text": "\"You brought this upon yourself. Why should I risk my life?\"",
+          "nextNodeId": "node-abandon",
+          "consequence": "Leave the king to his fate."
+        }
+      ]
+    },
+    {
+      "id": "node-sunken-library",
+      "storyId": "hollow-king",
+      "title": "The Sunken Library",
+      "prose": "The east wing staircase spirals down for longer than seems possible. Torches line the walls at irregular intervals, their flames burning an unnatural blue-white. The air thickens with the scent of parchment, rot, and something metallic that coats the back of your throat.\n\nThe iron key fits the antechamber lock with a sound like a sigh of relief.\n\nBeyond: a cathedral of shelves reaching into darkness overhead, books packed so tightly they seem to breathe. In the centre of the room, suspended in a column of faint greenish light, hangs a vial of black glass. Within it, something pulses — soft and irregular, like a second heartbeat.\n\nThe king's soul.\n\nBut between you and it, something vast shifts in the shadow behind the shelves. A voice like pages turning too fast fills the room.\n\n\"Another visitor. How lovely. The last three became such excellent additions to my collection.\"",
+      "imagePrompt": "An underground library with shelves reaching into darkness, thousands of ancient books, a glowing vial of black glass suspended in green light in the centre of the room, darkness between the shelves suggesting a massive lurking creature, blue-white torch flames, dark fantasy oil painting chiaroscuro style",
+      "cachedImageUrl": null,
+      "isTerminal": false,
+      "endingType": null,
+      "choices": [
+        {
+          "id": "choice-rush-phylactery",
+          "text": "Sprint for the phylactery immediately — don't let it speak.",
+          "nextNodeId": "node-victory",
+          "consequence": "Speed over caution."
+        },
+        {
+          "id": "choice-engage-archivore",
+          "text": "\"What will you offer me to leave the soul behind?\"",
+          "nextNodeId": "node-temptation",
+          "consequence": "Hear the creature's offer — at your peril."
+        }
+      ]
+    },
+    {
+      "id": "node-temptation",
+      "storyId": "hollow-king",
+      "title": "The Archivore's Offer",
+      "prose": "The thing slides partway into the light. It resembles a person only if you look at it sideways and are willing to forgive a great many discrepancies. Its face is a palimpsest — features layered atop other features, none quite settling.\n\n\"The soul,\" it says, tilting its head, \"is worth very little to the king now. He has forgotten how to use it. But you — ah. You have a memory I would very much like. A name. The name of someone you love.\"\n\nIt spreads its many-jointed hands in a gesture of generosity.\n\n\"Give me that name, and I will release the soul freely. The king regains himself. You leave unharmed. A tidy arrangement.\"\n\nYou know — from the king's own warning — that it lies. But the creature's eyes are sincere in the way that only the most practiced liars can manage.\n\nWhat do you do?",
+      "imagePrompt": "A monstrous entity with a layered face of shifting features emerging from library shadows, gesturing with many-jointed hands, green light illuminating it from below, rows of ancient books behind it, dark fantasy oil painting style, unsettling and surreal atmosphere",
+      "cachedImageUrl": null,
+      "isTerminal": false,
+      "endingType": null,
+      "choices": [
+        {
+          "id": "choice-refuse-grab",
+          "text": "Refuse. Dart past it and grab the phylactery.",
+          "nextNodeId": "node-victory",
+          "consequence": "Trust the king's warning."
+        },
+        {
+          "id": "choice-accept-trade",
+          "text": "Accept the trade — give it the name.",
+          "nextNodeId": "node-bittersweet",
+          "consequence": "What will you lose?"
+        }
+      ]
+    },
+    {
+      "id": "node-victory",
+      "storyId": "hollow-king",
+      "title": "The Soul Restored",
+      "prose": "Your fingers close around the black glass vial. The moment you touch it, the Archivore shrieks — a sound like a thousand pages torn at once — and the column of light collapses. Shelves shake. Books cascade.\n\nYou run.\n\nBehind you, the creature howls, but it does not follow past the antechamber threshold. The iron door slams shut on its own, and the key crumbles to rust in your hand.\n\nBack in the throne room, you place the phylactery before the Hollow King. He stares at it for a long moment. Then he closes his hand around it — and the black glass dissolves.\n\nColour floods his face. His eyes shift from silver back to dark amber. He exhales — a full, real breath — and sits down heavily on the throne step, looking not like a king at all but like an exhausted man who has been holding something terrible at arm's length for three years.\n\n\"I remember,\" he whispers. \"I remember everything.\"\n\nHe looks at you with eyes that finally contain depth.\n\n\"Thank you.\"",
+      "imagePrompt": "A king sitting on a throne step, colour returning to his face, eyes shifting from silver to warm amber, a dissolved black glass vial at his feet, warm golden light filling a dark gothic throne room, relief and emotion on his face, dark fantasy oil painting style",
+      "cachedImageUrl": null,
+      "isTerminal": true,
+      "endingType": "victory",
+      "choices": []
+    },
+    {
+      "id": "node-bittersweet",
+      "storyId": "hollow-king",
+      "title": "The Price of Mercy",
+      "prose": "You speak the name.\n\nFor a moment — just a fraction — you feel something leave you. Not painfully. Like a breath you forgot you were holding.\n\nThe Archivore smiles with all of its borrowed faces and steps aside. You take the phylactery. You walk back up the long staircase. You place the black glass in the king's hands.\n\nHe is restored — you can see it happen, colour rushing back, his silver eyes warming to amber, three years of grief finally landing on his face where it belongs.\n\nHe asks your name, to record it in the kingdom's histories.\n\nYou open your mouth.\n\nYou cannot remember who you were coming here to tell about this. There was someone. A face. Gone now, smooth as water.\n\nThe king notices your pause. You manage a smile. \"It doesn't matter,\" you say. And perhaps that's true. The kingdom is saved. The king lives. Whatever you traded — it was worth it.\n\nProbably.",
+      "imagePrompt": "A restored king looking grateful with warm eyes, a person standing before him with a subtle expression of confused loss, warm golden throne room light contrasting with shadows, bittersweet atmosphere, dark fantasy oil painting chiaroscuro style",
+      "cachedImageUrl": null,
+      "isTerminal": true,
+      "endingType": "bittersweet",
+      "choices": []
+    },
+    {
+      "id": "node-abandon",
+      "storyId": "hollow-king",
+      "title": "The Kingdom Left to Darkness",
+      "prose": "You drop the iron key on the obsidian floor. The sound rings through the empty throne room.\n\n\"Find another fool,\" you say. \"I have no interest in dying for someone who bargained away their own soul.\"\n\nThe Hollow King says nothing. His silver eyes track you as you walk back through the great doors and out into the courtyard, where the sky is the colour of old iron.\n\nThree weeks later, you hear the news in a tavern two kingdoms east: Ashenveil has gone dark. No ravens return from it. Merchants who attempt the road speak of a cold that settles in the chest and will not leave.\n\nYou order another drink.\n\nThe king made his choice long before you arrived. So did you.\n\nYou tell yourself it had nothing to do with you. Sometimes, late at night, you almost believe it.",
+      "imagePrompt": "A solitary figure walking away from a dark gothic castle under an iron-grey sky, the castle windows going dark behind them, a desolate road ahead, dark fantasy oil painting style, mood of regret and cold distance",
+      "cachedImageUrl": null,
+      "isTerminal": true,
+      "endingType": "defeat",
+      "choices": []
+    }
+  ]
+}

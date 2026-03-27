@@ -1,0 +1,77 @@
+'use client';
+
+import Link from 'next/link';
+import Image from 'next/image';
+import { motion } from 'framer-motion';
+import type { Story } from '@/types/story';
+
+interface StoryCardProps {
+  story: Story;
+}
+
+const GENRE_COLORS: Record<string, string> = {
+  fantasy: 'bg-purple-900/50 text-purple-300',
+  'sci-fi': 'bg-blue-900/50 text-blue-300',
+  horror: 'bg-red-900/50 text-red-300',
+  mystery: 'bg-yellow-900/50 text-yellow-300',
+  romance: 'bg-pink-900/50 text-pink-300',
+  thriller: 'bg-orange-900/50 text-orange-300',
+  historical: 'bg-amber-900/50 text-amber-300',
+  adventure: 'bg-green-900/50 text-green-300',
+};
+
+export function StoryCard({ story }: StoryCardProps) {
+  return (
+    <Link href={`/story/${story.id}`}>
+      <motion.article
+        whileHover={{ y: -4, scale: 1.02 }}
+        whileTap={{ scale: 0.98 }}
+        transition={{ duration: 0.2 }}
+        className="rounded-xl border border-gray-700 overflow-hidden bg-gray-900/60 backdrop-blur-sm hover:border-gray-500 transition-colors cursor-pointer h-full flex flex-col"
+      >
+        {/* Cover Image */}
+        <div className="relative aspect-video bg-gray-800 flex-shrink-0">
+          {story.coverImageUrl ? (
+            <Image
+              src={story.coverImageUrl}
+              alt={story.title}
+              fill
+              className="object-cover"
+              sizes="(max-width: 768px) 100vw, 400px"
+            />
+          ) : (
+            <div className="absolute inset-0 bg-gradient-to-br from-gray-800 via-gray-900 to-black flex items-center justify-center">
+              <span className="text-5xl opacity-20">✦</span>
+            </div>
+          )}
+        </div>
+
+        {/* Card Body */}
+        <div className="p-5 flex flex-col gap-3 flex-1">
+          <h3 className="text-xl font-cinzel font-semibold leading-tight">{story.title}</h3>
+          <p className="text-sm text-gray-400 font-crimson leading-relaxed line-clamp-3">
+            {story.description}
+          </p>
+
+          {/* Genre Tags */}
+          <div className="flex flex-wrap gap-1.5 mt-auto pt-2">
+            {story.genre.map((g) => (
+              <span
+                key={g}
+                className={`text-xs px-2 py-0.5 rounded-full font-medium capitalize ${GENRE_COLORS[g] ?? 'bg-gray-800 text-gray-400'}`}
+              >
+                {g}
+              </span>
+            ))}
+          </div>
+
+          {/* Meta */}
+          <div className="flex items-center justify-between text-xs text-gray-500 pt-1 border-t border-gray-800">
+            <span>~{story.estimatedMinutes} min</span>
+            <span className="capitalize">{story.mood}</span>
+          </div>
+        </div>
+      </motion.article>
+    </Link>
+  );
+}

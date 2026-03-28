@@ -14,6 +14,7 @@ import { SceneImage } from '@/components/scene/SceneImage';
 import { TypewriterText } from '@/components/scene/TypewriterText';
 import { ChoiceGrid } from '@/components/scene/ChoiceGrid';
 import { DungeonMasterBubble } from '@/components/scene/DungeonMasterBubble';
+import { NarrateButton } from '@/components/scene/NarrateButton';
 import { useSceneTransition } from '@/hooks/useSceneTransition';
 import { useImagePoller } from '@/hooks/useImagePoller';
 import { usePlayerSession } from '@/hooks/usePlayerSession';
@@ -150,6 +151,11 @@ export function SceneView({ storyId, initialNodeId, sessionId }: SceneViewProps)
                 className="text-gray-100"
               />
             </DungeonMasterBubble>
+            {proseComplete && (
+              <div className="flex justify-end mt-2 pr-1">
+                <NarrateButton text={prose} />
+              </div>
+            )}
           </motion.div>
 
           <AnimatePresence>

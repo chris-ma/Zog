@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import Image from 'next/image';
 import { LoadingSkeleton } from '@/components/ui/LoadingSkeleton';
 
 interface SceneImageProps {
@@ -11,7 +10,16 @@ interface SceneImageProps {
   className?: string;
 }
 
+/** Route external image URLs through our server-side proxy to avoid host blocks. */
+function toProxiedSrc(src: string): string {
+  if (src.startsWith('http://') || src.startsWith('https://')) {
+    return `/api/image-proxy?url=${encodeURIComponent(src)}`;
+  }
+  return src;
+}
+
 export function SceneImage({ src, alt, isLoading = false, className = '' }: SceneImageProps) {
+  const [imgLoaded, setImgLoaded] = useState(false);
   const [imgError, setImgError] = useState(false);
   const [transform, setTransform] = useState('perspective(800px) rotateX(0deg) rotateY(0deg)');
 
@@ -40,6 +48,8 @@ export function SceneImage({ src, alt, isLoading = false, className = '' }: Scen
     );
   }
 
+  const proxiedSrc = toProxiedSrc(src);
+
   return (
     <div
       style={{ transform, transition: 'transform 0.15s ease-out' }}
@@ -47,15 +57,21 @@ export function SceneImage({ src, alt, isLoading = false, className = '' }: Scen
       onMouseLeave={handleMouseLeave}
       className={`relative rounded-xl overflow-hidden aspect-video will-change-transform ${className}`}
     >
-      <Image
-        src={src}
+      {/* Skeleton shown until the img fires onLoad */}
+      {!imgLoaded && (
+        <div className="absolute inset-0">
+          <LoadingSkeleton className="w-full h-full rounded-none" />
+        </div>
+      )}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        src={proxiedSrc}
         alt={alt}
-        fill
-        unoptimized
-        className="object-cover"
+        onLoad={() => setImgLoaded(true)}
         onError={() => setImgError(true)}
-        sizes="(max-width: 768px) 100vw, 800px"
-        priority
+        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
+          imgLoaded ? 'opacity-100' : 'opacity-0'
+        }`}
       />
     </div>
   );

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 interface SceneImageProps {
   src?: string | null;
@@ -13,6 +13,16 @@ export function SceneImage({ src, alt, isLoading = false, className = '' }: Scen
   const [loaded, setLoaded] = useState(false);
   const [errored, setErrored] = useState(false);
   const [transform, setTransform] = useState('perspective(800px) rotateX(0deg) rotateY(0deg)');
+  const imgRef = useRef<HTMLImageElement>(null);
+
+  // If the image was already in the browser cache when this component mounted,
+  // the onLoad event fires before React attaches the handler and never triggers.
+  // Check img.complete after mount to catch that case (common on mobile).
+  useEffect(() => {
+    if (imgRef.current?.complete && !imgRef.current.naturalWidth === false) {
+      setLoaded(true);
+    }
+  }, [src]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -41,10 +51,11 @@ export function SceneImage({ src, alt, isLoading = false, className = '' }: Scen
       style={{ transform, transition: 'transform 0.15s ease-out' }}
       onMouseMove={handleMouseMove}
       onMouseLeave={() => setTransform('perspective(800px) rotateX(0deg) rotateY(0deg)')}
-      className={`relative rounded-xl overflow-hidden aspect-video will-change-transform bg-[#0d0d1a] ${className}`}
+      className={`relative rounded-xl overflow-hidden aspect-video bg-[#0d0d1a] ${className}`}
     >
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
+        ref={imgRef}
         src={src}
         alt={alt}
         onLoad={() => setLoaded(true)}

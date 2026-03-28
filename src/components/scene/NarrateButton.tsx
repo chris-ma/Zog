@@ -2,11 +2,34 @@
 
 import { useState, useEffect, useCallback } from 'react';
 
-interface NarrateButtonProps {
-  text: string;
+interface VoiceProfile {
+  rate: number;
+  pitch: number;
+  /** Voice name substrings to try in order */
+  preferredVoices: string[];
 }
 
-export function NarrateButton({ text }: NarrateButtonProps) {
+const VOICE_PROFILES: Record<string, VoiceProfile> = {
+  // Fun, high-energy animated storyteller for the kids burp adventure
+  animated: {
+    rate: 1.08,
+    pitch: 1.45,
+    preferredVoices: ['Google US English', 'Samantha', 'Zira', 'Google UK English Female', 'Karen', 'Veena'],
+  },
+  // Warm, measured narrator for everything else
+  default: {
+    rate: 0.92,
+    pitch: 1.05,
+    preferredVoices: ['Daniel', 'Google UK English Male', 'Samantha', 'Karen'],
+  },
+};
+
+interface NarrateButtonProps {
+  text: string;
+  voiceProfile?: keyof typeof VOICE_PROFILES;
+}
+
+export function NarrateButton({ text, voiceProfile = 'default' }: NarrateButtonProps) {
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [supported, setSupported] = useState(false);
 
@@ -40,42 +63,59 @@ export function NarrateButton({ text }: NarrateButtonProps) {
       return;
     }
 
-    // Strip {PLAYER_NAME} substitutions are already done upstream; just clean markdown-ish chars
-    const cleanText = text.replace(/[✦★]/g, '').trim();
-    const utterance = new SpeechSynthesisUtterance(cleanText);
-    utterance.rate = 0.92;
-    utterance.pitch = 1.05;
+    const profile = VOICE_PROFILES[voiceProfile];
 
-    // Prefer a warm English voice if available
-    const voices = window.speechSynthesis.getVoices();
-    const preferred = voices.find(
-      (v) =>
-        v.lang.startsWith('en') &&
-        (v.name.includes('Daniel') ||
-          v.name.includes('Google UK') ||
-          v.name.includes('Samantha') ||
-          v.name.includes('Karen')),
-    );
-    if (preferred) utterance.voice = preferred;
+    // Clean special chars; for animated profile add dramatic pauses via punctuation
+    let cleanText = text.replace(/[✦★]/g, '').trim();
+    if (voiceProfile === 'animated') {
+      // Insert a brief pause after every sentence ending to add theatrical timing
+      cleanText = cleanText.replace(/([.!?])\s+/g, '$1  ');
+    }
+
+    const utterance = new SpeechSynthesisUtterance(cleanText);
+    utterance.rate = profile.rate;
+    utterance.pitch = profile.pitch;
+
+    const trySetVoice = () => {
+      const voices = window.speechSynthesis.getVoices();
+      if (voices.length === 0) return; // voices not loaded yet
+
+      let chosen: SpeechSynthesisVoice | undefined;
+      for (const name of profile.preferredVoices) {
+        chosen = voices.find((v) => v.lang.startsWith('en') && v.name.includes(name));
+        if (chosen) break;
+      }
+      // Fallback: any en-US voice
+      if (!chosen) chosen = voices.find((v) => v.lang === 'en-US');
+      if (chosen) utterance.voice = chosen;
+    };
+
+    trySetVoice();
 
     utterance.onend = () => setIsSpeaking(false);
     utterance.onerror = () => setIsSpeaking(false);
 
     setIsSpeaking(true);
     window.speechSynthesis.speak(utterance);
-  }, [supported, isSpeaking, text]);
+  }, [supported, isSpeaking, text, voiceProfile]);
 
   if (!supported) return null;
+
+  const isAnimated = voiceProfile === 'animated';
 
   return (
     <button
       onClick={handleToggle}
       aria-label={isSpeaking ? 'Stop narration' : 'Narrate scene'}
       title={isSpeaking ? 'Stop narration' : 'Narrate scene'}
-      className={`inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full border transition-colors font-medium ${
+      className={`inline-flex items-center gap-1.5 text-xs px-3 py-1.5 rounded-full border transition-all font-medium ${
         isSpeaking
-          ? 'bg-purple-600/30 border-purple-500/70 text-purple-200 hover:bg-purple-600/50'
-          : 'bg-transparent border-purple-700/40 text-purple-400 hover:border-purple-500 hover:text-purple-200'
+          ? isAnimated
+            ? 'bg-yellow-500/20 border-yellow-400/70 text-yellow-200 hover:bg-yellow-500/30'
+            : 'bg-purple-600/30 border-purple-500/70 text-purple-200 hover:bg-purple-600/50'
+          : isAnimated
+            ? 'bg-transparent border-yellow-500/40 text-yellow-400 hover:border-yellow-400 hover:text-yellow-200'
+            : 'bg-transparent border-purple-700/40 text-purple-400 hover:border-purple-500 hover:text-purple-200'
       }`}
     >
       {isSpeaking ? (
@@ -86,7 +126,7 @@ export function NarrateButton({ text }: NarrateButtonProps) {
       ) : (
         <>
           <SpeakerIcon animating={false} />
-          <span>Narrate</span>
+          <span>{isAnimated ? '🎙️ Narrate' : 'Narrate'}</span>
         </>
       )}
     </button>

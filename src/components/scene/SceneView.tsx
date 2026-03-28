@@ -153,7 +153,10 @@ export function SceneView({ storyId, initialNodeId, sessionId }: SceneViewProps)
             </DungeonMasterBubble>
             {proseComplete && (
               <div className="flex justify-end mt-2 pr-1">
-                <NarrateButton text={prose} />
+                <NarrateButton
+                  text={prose}
+                  voiceProfile={storyId === 'burp-quest' ? 'animated' : 'default'}
+                />
               </div>
             )}
           </motion.div>

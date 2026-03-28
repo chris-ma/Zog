@@ -51,6 +51,7 @@ export function SceneImage({ src, alt, isLoading = false, className = '' }: Scen
         src={src}
         alt={alt}
         fill
+        unoptimized
         className="object-cover"
         onError={() => setImgError(true)}
         sizes="(max-width: 768px) 100vw, 800px"

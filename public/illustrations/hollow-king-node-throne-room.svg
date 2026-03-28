@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="576" viewBox="0 0 1024 576">
+  
+    <defs>
+      <radialGradient id="bg" cx="50%" cy="50%" r="70%">
+        <stop offset="0%" stop-color="#2d0040"/>
+        <stop offset="100%" stop-color="#1a0022"/>
+      </radialGradient>
+    </defs>
+    <rect width="1024" height="576" fill="url(#bg)"/>
+    
+    <radialGradient id="spot" cx="50%" cy="100%" r="70%" gradientUnits="userSpaceOnUse" x1="0" y1="576" x2="1024" y2="0">
+      <stop offset="0%" stop-color="#ec4899" stop-opacity="0.2"/>
+      <stop offset="60%" stop-color="#1a0022" stop-opacity="0"/>
+    </radialGradient>
+    <rect width="1024" height="576" fill="url(#spot)"/>
+  <circle cx="36.9" cy="318.5" r="122.2" fill="#ec4899" opacity="0.147"/><circle cx="1023.2" cy="533.8" r="44.6" fill="#ec4899" opacity="0.104"/><circle cx="43.7" cy="301.9" r="60.2" fill="#ec4899" opacity="0.115"/><circle cx="381.5" cy="26.9" r="106.0" fill="#ec4899" opacity="0.126"/><circle cx="851.1" cy="380.8" r="67.0" fill="#ec4899" opacity="0.075"/><circle cx="751.2" cy="125.1" r="51.4" fill="#ec4899" opacity="0.087"/><circle cx="658.2" cy="95.8" r="140.4" fill="#ec4899" opacity="0.175"/><circle cx="996.7" cy="436.7" r="30.4" fill="#ec4899" opacity="0.138"/><circle cx="579.1" cy="197.9" r="102.6" fill="#ec4899" opacity="0.170"/><circle cx="634.4" cy="496.5" r="79.3" fill="#ec4899" opacity="0.072"/><text x="642" y="475" font-size="11" fill="#fde68a" opacity="0.86" text-anchor="middle">✦</text><text x="226" y="283" font-size="10" fill="#fde68a" opacity="0.38" text-anchor="middle">✦</text><text x="979" y="404" font-size="11" fill="#fde68a" opacity="0.55" text-anchor="middle">✦</text><text x="762" y="67" font-size="7" fill="#fde68a" opacity="0.56" text-anchor="middle">✦</text><text x="42" y="166" font-size="14" fill="#fde68a" opacity="0.58" text-anchor="middle">✦</text><text x="192" y="92" font-size="12" fill="#fde68a" opacity="0.23" text-anchor="middle">✦</text><text x="887" y="462" font-size="12" fill="#fde68a" opacity="0.65" text-anchor="middle">✦</text><text x="983" y="251" font-size="15" fill="#fde68a" opacity="0.85" text-anchor="middle">✦</text><text x="521" y="40" font-size="15" fill="#fde68a" opacity="0.69" text-anchor="middle">✦</text><text x="752" y="164" font-size="10" fill="#fde68a" opacity="0.63" text-anchor="middle">✦</text><text x="311" y="261" font-size="13" fill="#fde68a" opacity="0.64" text-anchor="middle">✦</text><text x="951" y="255" font-size="9" fill="#fde68a" opacity="0.78" text-anchor="middle">✦</text><text x="451" y="218" font-size="14" fill="#fde68a" opacity="0.65" text-anchor="middle">✦</text><text x="619" y="525" font-size="12" fill="#fde68a" opacity="0.71" text-anchor="middle">✦</text>
+  
+  
+    <defs>
+      <linearGradient id="titleFade" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#000000" stop-opacity="0"/>
+        <stop offset="100%" stop-color="#000000" stop-opacity="0.65"/>
+      </linearGradient>
+    </defs>
+    <rect y="430" width="1024" height="146" fill="url(#titleFade)"/>
+  
+</svg>

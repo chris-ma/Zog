@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="576" viewBox="0 0 1024 576">
+  
+    <defs>
+      <radialGradient id="bg" cx="50%" cy="70%" r="60%">
+        <stop offset="0%" stop-color="#3d2a00"/>
+        <stop offset="100%" stop-color="#1a1200"/>
+      </radialGradient>
+    </defs>
+    <rect width="1024" height="576" fill="url(#bg)"/>
+    
+    <ellipse cx="507" cy="292" rx="160" ry="100" fill="#fbbf24" opacity="0.25"/>
+    <circle cx="214" cy="138" r="21" fill="#0d0d1a" opacity="0.6"/><circle cx="608" cy="178" r="34" fill="#0d0d1a" opacity="0.6"/><circle cx="801" cy="325" r="26" fill="#0d0d1a" opacity="0.6"/><circle cx="383" cy="422" r="16" fill="#0d0d1a" opacity="0.6"/><circle cx="169" cy="361" r="14" fill="#0d0d1a" opacity="0.6"/><circle cx="722" cy="95" r="28" fill="#0d0d1a" opacity="0.6"/><circle cx="314" cy="282" r="35" fill="#0d0d1a" opacity="0.6"/><circle cx="854" cy="220" r="24" fill="#0d0d1a" opacity="0.6"/>
+  <polygon points="6.594496170662927,0 -12.115219069438803,46.341769720041604 25.30421141076466,46.341769720041604" fill="#2d1f00" opacity="0.8"/><polygon points="92.54620693619805,0 83.17582247789218,98.16221712114341 101.91659139450391,98.16221712114341" fill="#2d1f00" opacity="0.8"/><polygon points="186.79458463130055,0 168.95767437724936,89.01811003429304 204.63149488535174,89.01811003429304" fill="#2d1f00" opacity="0.8"/><polygon points="290.1438450748012,0 276.32506156297006,93.58050385340594 303.9626285866324,93.58050385340594" fill="#2d1f00" opacity="0.8"/><polygon points="390.1306565942293,0 378.5013369267323,97.55481984409383 401.75997626172637,97.55481984409383" fill="#2d1f00" opacity="0.8"/><polygon points="477.0758544498681,0 462.5897841129809,77.57180680929957 491.56192478675524,77.57180680929957" fill="#2d1f00" opacity="0.8"/><polygon points="564.5850554826253,0 550.5130013286017,52.3651429154829 578.6571096366489,52.3651429154829" fill="#2d1f00" opacity="0.8"/><polygon points="670.2449762591053,0 651.1669097799053,40.70725054030941 689.3230427383054,40.70725054030941" fill="#2d1f00" opacity="0.8"/><polygon points="757.1055502340402,0 742.7585458862457,63.594245194363 771.4525545818346,63.594245194363" fill="#2d1f00" opacity="0.8"/><polygon points="847.0166077121327,0 838.0922103797893,98.58506305110294 855.941005044476,98.58506305110294" fill="#2d1f00" opacity="0.8"/><polygon points="913.6000709716061,0 908.5949946326023,46.06046839292638 918.6051473106099,46.06046839292638" fill="#2d1f00" opacity="0.8"/><polygon points="1025.9578614975228,0 1007.7684299339933,57.686746352744926 1044.1472930610523,57.686746352744926" fill="#2d1f00" opacity="0.8"/><text x="377" y="242" font-size="10" fill="#fde68a" opacity="0.44" text-anchor="middle">✦</text><text x="269" y="127" font-size="14" fill="#fde68a" opacity="0.62" text-anchor="middle">✦</text><text x="994" y="266" font-size="6" fill="#fde68a" opacity="0.75" text-anchor="middle">✦</text><text x="206" y="387" font-size="7" fill="#fde68a" opacity="0.22" text-anchor="middle">✦</text><text x="933" y="168" font-size="7" fill="#fde68a" opacity="0.40" text-anchor="middle">✦</text><text x="1000" y="351" font-size="10" fill="#fde68a" opacity="0.63" text-anchor="middle">✦</text>
+  
+  
+    <defs>
+      <linearGradient id="titleFade" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#000000" stop-opacity="0"/>
+        <stop offset="100%" stop-color="#000000" stop-opacity="0.65"/>
+      </linearGradient>
+    </defs>
+    <rect y="430" width="1024" height="146" fill="url(#titleFade)"/>
+  
+</svg>

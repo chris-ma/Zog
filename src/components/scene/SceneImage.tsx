@@ -10,7 +10,9 @@ interface SceneImageProps {
   className?: string;
 }
 
-/** Route external image URLs through our server-side proxy to avoid host blocks. */
+type LoadStage = 'proxy' | 'direct' | 'error';
+
+/** Route external image URLs through our server-side proxy first. */
 function toProxiedSrc(src: string): string {
   if (src.startsWith('http://') || src.startsWith('https://')) {
     return `/api/image-proxy?url=${encodeURIComponent(src)}`;
@@ -18,9 +20,13 @@ function toProxiedSrc(src: string): string {
   return src;
 }
 
+function isExternal(src: string) {
+  return src.startsWith('http://') || src.startsWith('https://');
+}
+
 export function SceneImage({ src, alt, isLoading = false, className = '' }: SceneImageProps) {
   const [imgLoaded, setImgLoaded] = useState(false);
-  const [imgError, setImgError] = useState(false);
+  const [stage, setStage] = useState<LoadStage>('proxy');
   const [transform, setTransform] = useState('perspective(800px) rotateX(0deg) rotateY(0deg)');
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -34,11 +40,21 @@ export function SceneImage({ src, alt, isLoading = false, className = '' }: Scen
     setTransform('perspective(800px) rotateX(0deg) rotateY(0deg)');
   };
 
+  const handleError = () => {
+    if (stage === 'proxy') {
+      // Proxy failed — try loading the URL directly in the browser
+      setStage('direct');
+    } else {
+      // Both failed — show gradient fallback
+      setStage('error');
+    }
+  };
+
   if (isLoading) {
     return <LoadingSkeleton className={className} aspectRatio="aspect-video" />;
   }
 
-  if (!src || imgError) {
+  if (!src || stage === 'error') {
     return (
       <div
         className={`rounded-xl aspect-video bg-gradient-to-br from-indigo-950 via-purple-950 to-black flex items-center justify-center ${className}`}
@@ -48,7 +64,8 @@ export function SceneImage({ src, alt, isLoading = false, className = '' }: Scen
     );
   }
 
-  const proxiedSrc = toProxiedSrc(src);
+  const activeSrc =
+    stage === 'proxy' && isExternal(src) ? toProxiedSrc(src) : src;
 
   return (
     <div
@@ -57,7 +74,7 @@ export function SceneImage({ src, alt, isLoading = false, className = '' }: Scen
       onMouseLeave={handleMouseLeave}
       className={`relative rounded-xl overflow-hidden aspect-video will-change-transform ${className}`}
     >
-      {/* Skeleton shown until the img fires onLoad */}
+      {/* Skeleton visible until onLoad fires */}
       {!imgLoaded && (
         <div className="absolute inset-0">
           <LoadingSkeleton className="w-full h-full rounded-none" />
@@ -65,10 +82,11 @@ export function SceneImage({ src, alt, isLoading = false, className = '' }: Scen
       )}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src={proxiedSrc}
+        key={activeSrc}
+        src={activeSrc}
         alt={alt}
         onLoad={() => setImgLoaded(true)}
-        onError={() => setImgError(true)}
+        onError={handleError}
         className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
           imgLoaded ? 'opacity-100' : 'opacity-0'
         }`}

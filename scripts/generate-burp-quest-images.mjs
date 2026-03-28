@@ -22,7 +22,8 @@ const STYLE_PREFIX =
 
 function buildPollinationsUrl(rawPrompt, seed) {
   const prompt = `${STYLE_PREFIX} ${rawPrompt}`;
-  const encoded = encodeURIComponent(prompt);
+  // encodeURIComponent leaves apostrophes unencoded; encode them explicitly
+  const encoded = encodeURIComponent(prompt).replace(/'/g, '%27');
   return `https://image.pollinations.ai/prompt/${encoded}?width=1024&height=576&nologo=true&seed=${seed}&model=flux`;
 }
 

@@ -61,7 +61,7 @@ export function SceneView({ storyId, initialNodeId, sessionId }: SceneViewProps)
 
   const handleEndingCTA = useCallback(() => {
     router.push(
-      `/story/${storyId}/ending?type=${currentNode?.endingType ?? 'neutral'}&session=${playerSession?.id ?? ''}`,
+      `/story/${storyId}/ending?type=${currentNode?.endingType ?? 'neutral'}&nodeId=${currentNode?.id ?? ''}&session=${playerSession?.id ?? ''}`,
     );
   }, [router, storyId, currentNode, playerSession]);
 

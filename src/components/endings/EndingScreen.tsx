@@ -1,130 +1,156 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
-import type { EndingType } from '@/types/story';
+import { usePlayer, injectPlayerName } from '@/context/PlayerContext';
+import type { StoryNode } from '@/types/story';
 
 interface EndingScreenProps {
   storyId: string;
   endingType?: string;
+  nodeId?: string;
   sessionId?: string;
 }
 
-const ENDING_CONFIG: Record<
-  EndingType,
-  { label: string; color: string; description: string; icon: string }
-> = {
-  victory: {
-    label: 'Victory',
-    color: 'text-yellow-400',
-    description: 'You triumphed against all odds. Your legend will be told for generations.',
-    icon: '✦',
-  },
-  defeat: {
-    label: 'Defeat',
-    color: 'text-red-400',
-    description: 'The darkness claimed you. Perhaps another path awaits.',
-    icon: '✗',
-  },
-  bittersweet: {
-    label: 'A Bittersweet End',
-    color: 'text-purple-400',
-    description: 'You achieved something, but at a cost. The world is changed — as are you.',
-    icon: '◈',
-  },
-  neutral: {
-    label: 'The Journey Ends',
-    color: 'text-gray-300',
-    description: 'Every adventure must reach its final page. Yours ends here.',
-    icon: '○',
-  },
-  secret: {
-    label: 'A Hidden Ending',
-    color: 'text-teal-400',
-    description: 'Few find this path. You have uncovered a truth known only to the bold.',
-    icon: '◆',
-  },
+const BADGE_STYLES: Record<string, { bg: string; text: string }> = {
+  EPIC:    { bg: 'bg-yellow-500/20',  text: 'text-yellow-300'  },
+  GROSS:   { bg: 'bg-green-500/20',   text: 'text-green-300'   },
+  WEIRD:   { bg: 'bg-pink-500/20',    text: 'text-pink-300'    },
+  AWESOME: { bg: 'bg-blue-500/20',    text: 'text-blue-300'    },
+  SILLY:   { bg: 'bg-orange-500/20',  text: 'text-orange-300'  },
 };
 
-const DEFAULT_ENDING = ENDING_CONFIG.neutral;
+const DEFAULT_BADGE = { bg: 'bg-purple-500/20', text: 'text-purple-300' };
 
-export function EndingScreen({ storyId, endingType, sessionId: _sessionId }: EndingScreenProps) {
-  const [particlesReady, setParticlesReady] = useState(false);
+const BADGE_EMOJIS: Record<string, string> = {
+  EPIC: '⚔️', GROSS: '🤢', WEIRD: '🌀', AWESOME: '🌟', SILLY: '🤪',
+};
 
-  const config =
-    endingType && endingType in ENDING_CONFIG
-      ? ENDING_CONFIG[endingType as EndingType]
-      : DEFAULT_ENDING;
+export function EndingScreen({ storyId, endingType, nodeId, sessionId: _sessionId }: EndingScreenProps) {
+  const { playerName } = usePlayer();
+  const [node, setNode] = useState<StoryNode | null>(null);
+  const [isLoading, setIsLoading] = useState(!!nodeId);
 
-  useEffect(() => {
-    // Placeholder for tsparticles initialisation
-    // TODO: Initialise tsParticles here once the tsparticles package is configured
-    setParticlesReady(true);
-  }, []);
+  const fetchNode = useCallback(async () => {
+    if (!nodeId) return;
+    try {
+      const res = await fetch('/api/scene', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ storyId, nodeId, choicePath: [] }),
+      });
+      if (res.ok) {
+        const data = (await res.json()) as { scene: StoryNode };
+        setNode(data.scene);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }, [storyId, nodeId]);
+
+  useEffect(() => { fetchNode(); }, [fetchNode]);
+
+  const badge = node?.endingBadge ?? null;
+  const badgeStyle = badge ? (BADGE_STYLES[badge] ?? DEFAULT_BADGE) : DEFAULT_BADGE;
+  const title = node ? injectPlayerName(node.title, playerName) : 'Your Story Ends';
+  const prose = node ? injectPlayerName(node.prose, playerName) : null;
+  const flavourLine = endingType === 'victory'
+    ? 'You triumphed against all odds. Legend status: achieved.'
+    : 'Every adventure reaches its final page.';
 
   return (
-    <div className="relative min-h-screen flex flex-col items-center justify-center px-6 py-16 overflow-hidden">
-      {/* Particles slot */}
-      {particlesReady && (
-        <div id="tsparticles" className="absolute inset-0 pointer-events-none" aria-hidden="true" />
-      )}
-
-      {/* Background gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-black/80 pointer-events-none" />
-
+    <div className="min-h-screen bg-[#0d0d1a] flex flex-col items-center justify-start px-4 py-12">
       <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.7, ease: 'easeOut' }}
-        className="relative z-10 max-w-2xl w-full text-center space-y-8"
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+        className="w-full max-w-2xl space-y-8"
       >
-        {/* Ending Icon */}
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ delay: 0.3, type: 'spring', stiffness: 200, damping: 14 }}
-          className={`text-7xl ${config.color} select-none`}
-        >
-          {config.icon}
-        </motion.div>
+        {/* Badge */}
+        {badge && (
+          <motion.div
+            initial={{ scale: 0.5, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.2, type: 'spring', stiffness: 200, damping: 14 }}
+            className="flex justify-center"
+          >
+            <span className={`inline-flex items-center gap-2 px-5 py-2 rounded-full text-sm font-bold tracking-widest uppercase ${badgeStyle.bg} ${badgeStyle.text}`}>
+              {BADGE_EMOJIS[badge] ?? '✦'} {badge} ENDING
+            </span>
+          </motion.div>
+        )}
 
-        {/* Ending Label */}
+        {/* Title */}
         <motion.h1
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.5 }}
-          className={`text-4xl font-cinzel font-bold ${config.color}`}
+          transition={{ delay: 0.35, duration: 0.5 }}
+          className={`text-3xl sm:text-4xl font-cinzel font-bold text-center ${badgeStyle.text}`}
         >
-          {config.label}
+          {isLoading ? '…' : title}
         </motion.h1>
 
-        {/* Ending Description */}
+        {/* Divider */}
+        <motion.div
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          transition={{ delay: 0.5, duration: 0.4 }}
+          className="h-px bg-gradient-to-r from-transparent via-purple-500/50 to-transparent"
+        />
+
+        {/* Ending prose */}
+        {prose && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6, duration: 0.6 }}
+            className="bg-[#1a1a2e] border border-purple-800/30 rounded-2xl px-6 py-5 space-y-4"
+          >
+            {prose.split('\n\n').map((para, i) => (
+              <p key={i} className="text-gray-300 leading-relaxed font-crimson text-lg">
+                {para}
+              </p>
+            ))}
+          </motion.div>
+        )}
+
+        {!prose && !isLoading && (
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.6 }}
+            className="text-center text-gray-400 italic font-crimson text-xl"
+          >
+            {flavourLine}
+          </motion.p>
+        )}
+
         <motion.p
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 0.7, duration: 0.5 }}
-          className="text-xl font-crimson text-gray-300 leading-relaxed italic"
+          transition={{ delay: 0.9 }}
+          className="text-center text-purple-400/60 text-sm tracking-widest uppercase font-cinzel"
         >
-          {config.description}
+          ✦ The End ✦
         </motion.p>
 
         {/* Actions */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1, duration: 0.5 }}
-          className="flex flex-col sm:flex-row gap-4 justify-center pt-4"
+          transition={{ delay: 1.1, duration: 0.4 }}
+          className="flex flex-col sm:flex-row gap-3 justify-center pt-2"
         >
           <Link
-            href={`/story/${storyId}/play`}
-            className="px-8 py-3 rounded-xl border border-gray-600 hover:border-gray-400 font-cinzel text-sm transition-colors"
+            href={`/story/${storyId}`}
+            className="px-8 py-3 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-center transition-colors"
           >
             Play Again
           </Link>
           <Link
             href="/"
-            className="px-8 py-3 rounded-xl bg-primary text-white font-cinzel text-sm hover:opacity-90 transition-opacity"
+            className="px-8 py-3 rounded-xl border border-gray-600 hover:border-gray-400 text-gray-300 font-medium text-center transition-colors"
           >
             Story Library
           </Link>

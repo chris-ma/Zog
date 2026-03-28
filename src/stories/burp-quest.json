@@ -3,7 +3,10 @@
   "slug": "burp-quest",
   "title": "The Galaxy-Brained Burp Quest",
   "description": "A talking toilet, seventeen galaxies, a four-thousand-year-old cheese wizard, and one very brave kid with a backpack. Zero vegetables. One hundred percent bonkers.",
-  "genre": ["adventure", "sci-fi"],
+  "genre": [
+    "adventure",
+    "sci-fi"
+  ],
   "artStyle": "vibrant cartoon illustration, bold outlines, bright colours, whimsical children's book style",
   "mood": "silly and adventurous",
   "estimatedMinutes": 12,
@@ -265,7 +268,8 @@
       "cachedImageUrl": "/media/69a182719474a625a2bf47f4dc23f8a3893e381b.png",
       "isTerminal": true,
       "endingType": "victory",
-      "choices": []
+      "choices": [],
+      "endingBadge": "EPIC"
     },
     {
       "id": "node-029",
@@ -276,7 +280,8 @@
       "cachedImageUrl": "/media/d907dea4d41341893c0bd384b77d4baf4e8b416b.png",
       "isTerminal": true,
       "endingType": "victory",
-      "choices": []
+      "choices": [],
+      "endingBadge": "GROSS"
     },
     {
       "id": "node-037",
@@ -287,7 +292,8 @@
       "cachedImageUrl": "/media/e517a9087cd02f0f0d33f5717c9da55bea00256f.png",
       "isTerminal": true,
       "endingType": "neutral",
-      "choices": []
+      "choices": [],
+      "endingBadge": "SILLY"
     },
     {
       "id": "node-049",
@@ -298,7 +304,8 @@
       "cachedImageUrl": "/media/ba03661f4a7bf5cff1f7483198c180e9a86562f2.png",
       "isTerminal": true,
       "endingType": "neutral",
-      "choices": []
+      "choices": [],
+      "endingBadge": "WEIRD"
     },
     {
       "id": "node-057",
@@ -309,7 +316,8 @@
       "cachedImageUrl": "/media/b287dca6a6440b8bbdf75c5cc5b62d1cd9be73ed.png",
       "isTerminal": true,
       "endingType": "victory",
-      "choices": []
+      "choices": [],
+      "endingBadge": "EPIC"
     },
     {
       "id": "node-061",
@@ -320,7 +328,8 @@
       "cachedImageUrl": "/media/34cb309ad2f823d8418e70ca34d129d85ebf774f.png",
       "isTerminal": true,
       "endingType": "victory",
-      "choices": []
+      "choices": [],
+      "endingBadge": "AWESOME"
     },
     {
       "id": "node-063",
@@ -331,7 +340,8 @@
       "cachedImageUrl": "/media/881bd00ce60da283912f12bdab2044144bc852b7.png",
       "isTerminal": true,
       "endingType": "neutral",
-      "choices": []
+      "choices": [],
+      "endingBadge": "WEIRD"
     },
     {
       "id": "node-065",
@@ -342,7 +352,8 @@
       "cachedImageUrl": "/media/f0837cd573d73073f72acb89675cbccd8e92c1e2.png",
       "isTerminal": true,
       "endingType": "victory",
-      "choices": []
+      "choices": [],
+      "endingBadge": "AWESOME"
     },
     {
       "id": "node-067",
@@ -353,7 +364,8 @@
       "cachedImageUrl": "/media/7cfa3ef587983b13a1ebfb5253be60707254e097.png",
       "isTerminal": true,
       "endingType": "victory",
-      "choices": []
+      "choices": [],
+      "endingBadge": "GROSS"
     },
     {
       "id": "node-069",
@@ -364,7 +376,8 @@
       "cachedImageUrl": "/media/ad4c97dd4782bda05f19b03474b60c67232791e9.png",
       "isTerminal": true,
       "endingType": "victory",
-      "choices": []
+      "choices": [],
+      "endingBadge": "EPIC"
     }
   ]
 }

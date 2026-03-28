@@ -9,8 +9,9 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        cinzel: ['Cinzel', 'serif'],
-        crimson: ['Crimson Text', 'serif'],
+        cinzel: ['Cinzel', 'Georgia', 'serif'],
+        crimson: ['Crimson Text', 'Georgia', 'serif'],
+        fredoka: ['Fredoka One', 'Arial Rounded MT Bold', 'sans-serif'],
       },
       colors: {
         primary: 'var(--primary-color)',

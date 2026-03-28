@@ -34,6 +34,7 @@ export interface StoryNode {
   choices: Choice[];
   isTerminal: boolean;
   endingType?: EndingType | null;
+  endingBadge?: string | null;
 }
 
 export interface Story {

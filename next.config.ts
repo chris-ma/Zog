@@ -5,6 +5,11 @@ const nextConfig: NextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
+        hostname: 'image.pollinations.ai',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
         hostname: 'oaidalleapiprodscus.blob.core.windows.net',
         pathname: '/**',
       },

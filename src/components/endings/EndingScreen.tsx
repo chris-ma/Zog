@@ -5,27 +5,29 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { usePlayer, injectPlayerName } from '@/context/PlayerContext';
 import type { StoryNode } from '@/types/story';
+import type { StoryHistoryEntry } from '@/components/scene/SceneView';
 
 interface EndingScreenProps {
   storyId: string;
   endingType?: string;
   nodeId?: string;
   sessionId?: string;
+  histKey?: string;
 }
 
 const BADGE_STYLES: Record<string, { bg: string; text: string }> = {
   // Burp Quest
-  EPIC:      { bg: 'bg-yellow-500/20',  text: 'text-yellow-300'  },
-  GROSS:     { bg: 'bg-green-500/20',   text: 'text-green-300'   },
-  WEIRD:     { bg: 'bg-pink-500/20',    text: 'text-pink-300'    },
-  AWESOME:   { bg: 'bg-blue-500/20',    text: 'text-blue-300'    },
-  SILLY:     { bg: 'bg-orange-500/20',  text: 'text-orange-300'  },
+  EPIC:      { bg: 'bg-yellow-500/20',   text: 'text-yellow-300'  },
+  GROSS:     { bg: 'bg-green-500/20',    text: 'text-green-300'   },
+  WEIRD:     { bg: 'bg-pink-500/20',     text: 'text-pink-300'    },
+  AWESOME:   { bg: 'bg-blue-500/20',     text: 'text-blue-300'    },
+  SILLY:     { bg: 'bg-orange-500/20',   text: 'text-orange-300'  },
   // Double Life Drama
-  LEGENDARY: { bg: 'bg-yellow-400/20', text: 'text-yellow-200'  },
-  ICONIC:    { bg: 'bg-fuchsia-500/20', text: 'text-fuchsia-300' },
-  SWEET:     { bg: 'bg-rose-500/20',   text: 'text-rose-300'    },
-  MESSY:     { bg: 'bg-amber-500/20',  text: 'text-amber-300'   },
-  DRAMATIC:  { bg: 'bg-red-500/20',    text: 'text-red-300'     },
+  LEGENDARY: { bg: 'bg-yellow-400/20',  text: 'text-yellow-200'  },
+  ICONIC:    { bg: 'bg-fuchsia-500/20',  text: 'text-fuchsia-300' },
+  SWEET:     { bg: 'bg-rose-500/20',     text: 'text-rose-300'    },
+  MESSY:     { bg: 'bg-amber-500/20',    text: 'text-amber-300'   },
+  DRAMATIC:  { bg: 'bg-red-500/20',      text: 'text-red-300'     },
 };
 
 const DEFAULT_BADGE = { bg: 'bg-purple-500/20', text: 'text-purple-300' };
@@ -35,10 +37,11 @@ const BADGE_EMOJIS: Record<string, string> = {
   LEGENDARY: '👑', ICONIC: '💅', SWEET: '💖', MESSY: '💥', DRAMATIC: '🎭',
 };
 
-export function EndingScreen({ storyId, endingType, nodeId, sessionId: _sessionId }: EndingScreenProps) {
+export function EndingScreen({ storyId, endingType, nodeId, sessionId: _sessionId, histKey }: EndingScreenProps) {
   const { playerName } = usePlayer();
   const [node, setNode] = useState<StoryNode | null>(null);
   const [isLoading, setIsLoading] = useState(!!nodeId);
+  const [isDownloading, setIsDownloading] = useState(false);
 
   const fetchNode = useCallback(async () => {
     if (!nodeId) return;
@@ -58,6 +61,30 @@ export function EndingScreen({ storyId, endingType, nodeId, sessionId: _sessionI
   }, [storyId, nodeId]);
 
   useEffect(() => { fetchNode(); }, [fetchNode]);
+
+  const handleDownloadPdf = useCallback(async () => {
+    setIsDownloading(true);
+    try {
+      let history: StoryHistoryEntry[] = [];
+      if (histKey) {
+        const raw = localStorage.getItem(decodeURIComponent(histKey));
+        if (raw) history = JSON.parse(raw) as StoryHistoryEntry[];
+      }
+
+      const { generateStoryPdf } = await import('@/lib/story-pdf');
+      await generateStoryPdf({
+        storyTitle: node?.storyId
+          ? node.storyId.replace(/-/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase())
+          : 'My Adventure',
+        playerName: playerName || 'Adventurer',
+        endingTitle: node ? injectPlayerName(node.title, playerName) : 'The End',
+        endingBadge: node?.endingBadge ?? null,
+        history,
+      });
+    } finally {
+      setIsDownloading(false);
+    }
+  }, [histKey, node, playerName]);
 
   const badge = node?.endingBadge ?? null;
   const badgeStyle = badge ? (BADGE_STYLES[badge] ?? DEFAULT_BADGE) : DEFAULT_BADGE;
@@ -156,6 +183,19 @@ export function EndingScreen({ storyId, endingType, nodeId, sessionId: _sessionI
           >
             Play Again
           </Link>
+          <button
+            onClick={handleDownloadPdf}
+            disabled={isDownloading || isLoading}
+            className="px-8 py-3 rounded-xl border border-purple-500/60 hover:border-purple-400 text-purple-300 hover:text-purple-200 font-bold text-center transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+          >
+            {isDownloading ? (
+              <>
+                <span className="animate-spin text-sm">⟳</span> Generating…
+              </>
+            ) : (
+              <>📄 Download Story</>
+            )}
+          </button>
           <Link
             href="/"
             className="px-8 py-3 rounded-xl border border-gray-600 hover:border-gray-400 text-gray-300 font-medium text-center transition-colors"

@@ -1,6 +1,12 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useRef } from 'react';
+
+export interface StoryHistoryEntry {
+  title: string;
+  prose: string;
+  choiceText: string | null; // null on the terminal node
+}
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
 import type { Choice } from '@/types/story';
@@ -24,6 +30,7 @@ export function SceneView({ storyId, initialNodeId, sessionId }: SceneViewProps)
   const { playerName } = usePlayer();
   const [proseComplete, setProseComplete] = useState(false);
   const [skipTypewriter, setSkipTypewriter] = useState(false);
+  const historyRef = useRef<StoryHistoryEntry[]>([]);
 
   const { currentNode, isLoading, isTransitioning, navigateToChoice } = useSceneTransition({
     storyId,
@@ -46,6 +53,11 @@ export function SceneView({ storyId, initialNodeId, sessionId }: SceneViewProps)
   const handleChoiceSelect = useCallback(
     async (choice: Choice) => {
       if (currentNode?.isTerminal) return;
+      // Record current scene + the choice being made
+      historyRef.current = [
+        ...historyRef.current,
+        { title: currentNode?.title ?? '', prose: currentNode?.prose ?? '', choiceText: choice.text },
+      ];
       setProseComplete(false);
       setSkipTypewriter(false);
       await navigateToChoice(choice);
@@ -60,8 +72,19 @@ export function SceneView({ storyId, initialNodeId, sessionId }: SceneViewProps)
   }, []);
 
   const handleEndingCTA = useCallback(() => {
+    // Save full history including terminal node to localStorage
+    const sessionKey = `cyoa_history_${storyId}_${playerSession?.id ?? 'anon'}`;
+    const fullHistory: StoryHistoryEntry[] = [
+      ...historyRef.current,
+      { title: currentNode?.title ?? '', prose: currentNode?.prose ?? '', choiceText: null },
+    ];
+    try {
+      localStorage.setItem(sessionKey, JSON.stringify(fullHistory));
+    } catch {
+      // localStorage may be unavailable; PDF will show without history
+    }
     router.push(
-      `/story/${storyId}/ending?type=${currentNode?.endingType ?? 'neutral'}&nodeId=${currentNode?.id ?? ''}&session=${playerSession?.id ?? ''}`,
+      `/story/${storyId}/ending?type=${currentNode?.endingType ?? 'neutral'}&nodeId=${currentNode?.id ?? ''}&session=${playerSession?.id ?? ''}&histKey=${encodeURIComponent(sessionKey)}`,
     );
   }, [router, storyId, currentNode, playerSession]);
 

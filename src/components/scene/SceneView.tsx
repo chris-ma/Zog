@@ -3,13 +3,15 @@
 import { useState, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import type { StoryNode, Choice } from '@/types/story';
+import type { Choice } from '@/types/story';
 import { SceneImage } from '@/components/scene/SceneImage';
 import { TypewriterText } from '@/components/scene/TypewriterText';
 import { ChoiceGrid } from '@/components/scene/ChoiceGrid';
+import { DungeonMasterBubble } from '@/components/scene/DungeonMasterBubble';
 import { useSceneTransition } from '@/hooks/useSceneTransition';
 import { useImagePoller } from '@/hooks/useImagePoller';
 import { usePlayerSession } from '@/hooks/usePlayerSession';
+import { usePlayer, injectPlayerName } from '@/context/PlayerContext';
 
 interface SceneViewProps {
   storyId: string;
@@ -19,6 +21,7 @@ interface SceneViewProps {
 
 export function SceneView({ storyId, initialNodeId, sessionId }: SceneViewProps) {
   const router = useRouter();
+  const { playerName } = usePlayer();
   const [proseComplete, setProseComplete] = useState(false);
   const [skipTypewriter, setSkipTypewriter] = useState(false);
 
@@ -43,41 +46,44 @@ export function SceneView({ storyId, initialNodeId, sessionId }: SceneViewProps)
   const handleChoiceSelect = useCallback(
     async (choice: Choice) => {
       if (currentNode?.isTerminal) return;
+      setProseComplete(false);
+      setSkipTypewriter(false);
       await navigateToChoice(choice);
-
-      if (currentNode?.isTerminal) {
-        router.push(`/story/${storyId}/ending?type=${currentNode.endingType}&session=${playerSession?.id}`);
-      }
     },
-    [currentNode, navigateToChoice, router, storyId, playerSession],
+    [currentNode, navigateToChoice],
   );
 
-  const handleProseComplete = useCallback(() => {
-    setProseComplete(true);
-  }, []);
-
-  const handleSkipClick = useCallback(() => {
+  const handleProseComplete = useCallback(() => setProseComplete(true), []);
+  const handleSkip = useCallback(() => {
     setSkipTypewriter(true);
     setProseComplete(true);
   }, []);
 
+  const handleEndingCTA = useCallback(() => {
+    router.push(
+      `/story/${storyId}/ending?type=${currentNode?.endingType ?? 'neutral'}&session=${playerSession?.id ?? ''}`,
+    );
+  }, [router, storyId, currentNode, playerSession]);
+
   if (isLoading && !currentNode) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-gray-400 animate-pulse font-cinzel text-lg">Loading scene…</div>
+      <div className="min-h-screen flex items-center justify-center bg-[#0d0d1a]">
+        <div className="text-purple-300 animate-pulse text-lg">Loading scene…</div>
       </div>
     );
   }
 
   if (!currentNode) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="text-gray-400 font-cinzel">Scene not found.</div>
+      <div className="min-h-screen flex items-center justify-center bg-[#0d0d1a]">
+        <div className="text-gray-400">Scene not found.</div>
       </div>
     );
   }
 
   const displayedImageUrl = currentNode.cachedImageUrl ?? imageUrl ?? null;
+  const prose = injectPlayerName(currentNode.prose, playerName);
+  const title = injectPlayerName(currentNode.title, playerName);
 
   return (
     <AnimatePresence mode="wait">
@@ -86,88 +92,85 @@ export function SceneView({ storyId, initialNodeId, sessionId }: SceneViewProps)
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        transition={{ duration: 0.5 }}
-        className="min-h-screen max-w-4xl mx-auto px-4 py-8 space-y-8"
+        transition={{ duration: 0.45 }}
+        className="min-h-screen bg-[#0d0d1a] flex flex-col"
       >
-        {/* Scene Image */}
-        <SceneImage
-          src={displayedImageUrl}
-          alt={currentNode.title}
-          isLoading={isImageLoading}
-          className="w-full shadow-2xl"
-        />
-
-        {/* Scene Title */}
-        <motion.h1
-          initial={{ opacity: 0, y: 12 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.4 }}
-          className="text-3xl font-cinzel font-bold text-center"
-        >
-          {currentNode.title}
-        </motion.h1>
-
-        {/* Prose */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.35, duration: 0.4 }}
-          className="relative"
-        >
-          <TypewriterText
-            text={currentNode.prose}
-            onComplete={handleProseComplete}
-            skip={skipTypewriter}
-            className="text-lg text-gray-300"
+        <div className="w-full">
+          <SceneImage
+            src={displayedImageUrl}
+            alt={title}
+            isLoading={isImageLoading && !displayedImageUrl}
+            className="w-full rounded-none sm:rounded-b-2xl"
           />
-          {!proseComplete && (
-            <button
-              onClick={handleSkipClick}
-              className="mt-3 text-xs text-gray-500 hover:text-gray-300 underline transition-colors"
-            >
-              Skip
-            </button>
-          )}
-        </motion.div>
+        </div>
 
-        {/* Choices */}
-        <AnimatePresence>
-          {proseComplete && !currentNode.isTerminal && (
+        <div className="flex-1 max-w-2xl mx-auto w-full px-4 py-6 space-y-6">
+          <motion.h2
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15, duration: 0.35 }}
+            className="text-xl sm:text-2xl font-bold text-purple-300 text-center tracking-wide"
+          >
+            {title}
+          </motion.h2>
+
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.25, duration: 0.4 }}
+          >
+            <DungeonMasterBubble onSkip={handleSkip} showSkip={!proseComplete}>
+              <TypewriterText
+                text={prose}
+                onComplete={handleProseComplete}
+                skip={skipTypewriter}
+                className="text-gray-100"
+              />
+            </DungeonMasterBubble>
+          </motion.div>
+
+          <AnimatePresence>
+            {proseComplete && !currentNode.isTerminal && (
+              <motion.div
+                initial={{ opacity: 0, y: 16 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.35 }}
+              >
+                <ChoiceGrid
+                  choices={currentNode.choices}
+                  onChoiceSelect={handleChoiceSelect}
+                  disabled={isTransitioning}
+                />
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          {proseComplete && currentNode.isTerminal && (
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.4 }}
+              className="text-center space-y-4 pb-8"
             >
-              <ChoiceGrid
-                choices={currentNode.choices}
-                onChoiceSelect={handleChoiceSelect}
-                disabled={isTransitioning}
-              />
+              <p className="text-purple-300 italic text-sm">✦ Your story has ended. ✦</p>
+              <button
+                onClick={handleEndingCTA}
+                className="px-8 py-3 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold transition-colors"
+              >
+                See Your Ending
+              </button>
+              <div>
+                <button
+                  onClick={() => router.push(`/story/${storyId}`)}
+                  className="text-xs text-gray-500 hover:text-gray-300 underline transition-colors"
+                >
+                  Play again from the start
+                </button>
+              </div>
             </motion.div>
           )}
-        </AnimatePresence>
-
-        {/* Terminal scene CTA */}
-        {proseComplete && currentNode.isTerminal && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            className="text-center space-y-4"
-          >
-            <p className="font-cinzel text-gray-400 italic">Your story has ended.</p>
-            <button
-              onClick={() =>
-                router.push(
-                  `/story/${storyId}/ending?type=${currentNode.endingType}&session=${playerSession?.id}`,
-                )
-              }
-              className="px-8 py-3 rounded-xl bg-primary text-white font-cinzel font-semibold hover:opacity-90 transition-opacity"
-            >
-              See Your Ending
-            </button>
-          </motion.div>
-        )}
+        </div>
       </motion.div>
     </AnimatePresence>
   );

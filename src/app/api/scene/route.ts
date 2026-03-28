@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { z } from 'zod';
-import { db } from '@/lib/db';
-import { getStaticNode, getDynamicScene } from '@/lib/story-engine';
-import type { Story, StoryNode, DynamicContext } from '@/types/story';
+import { loadStory, getNodeFromStory } from '@/lib/story-loader';
+import { getDynamicScene } from '@/lib/story-engine';
+import type { Story, DynamicContext } from '@/types/story';
 
 const sceneRequestSchema = z.object({
   storyId: z.string(),
@@ -13,13 +13,6 @@ const sceneRequestSchema = z.object({
   lastChoice: z.string().optional(),
 });
 
-/**
- * POST /api/scene
- * Handles both static and dynamic scene requests.
- *
- * For static stories: looks up the node by ID in the database.
- * For dynamic stories: calls Claude to generate the next scene.
- */
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
@@ -34,20 +27,12 @@ export async function POST(request: NextRequest) {
 
     const { storyId, nodeId, choicePath, previousProse, lastChoice } = parsed.data;
 
-    // Fetch the story from the database
-    const story = await db.story.findUnique({
-      where: { id: storyId },
-      include: { nodes: true },
-    });
-
+    const story = loadStory(storyId);
     if (!story) {
       return NextResponse.json({ error: 'Story not found' }, { status: 404 });
     }
 
-    const typedStory = story as unknown as Story & { nodes: StoryNode[] };
-
     if (story.isDynamic) {
-      // Dynamic story: generate a scene with Claude
       const context: DynamicContext = {
         storyId,
         story: {
@@ -62,23 +47,21 @@ export async function POST(request: NextRequest) {
         lastChoice,
         nodeDepth: (choicePath ?? []).length,
       };
-
       const scene = await getDynamicScene(context);
       return NextResponse.json({ scene, isDynamic: true });
-    } else {
-      // Static story: look up node by ID
-      const targetNodeId = nodeId ?? story.rootNodeId;
-      const node = getStaticNode(typedStory, targetNodeId);
-
-      if (!node) {
-        return NextResponse.json(
-          { error: `Node '${targetNodeId}' not found in story` },
-          { status: 404 },
-        );
-      }
-
-      return NextResponse.json({ scene: node, isDynamic: false });
     }
+
+    const targetNodeId = nodeId ?? story.rootNodeId;
+    const node = getNodeFromStory(story, targetNodeId);
+
+    if (!node) {
+      return NextResponse.json(
+        { error: `Node '${targetNodeId}' not found in story` },
+        { status: 404 },
+      );
+    }
+
+    return NextResponse.json({ scene: node, isDynamic: false });
   } catch (error) {
     console.error('[POST /api/scene]', error);
     return NextResponse.json({ error: 'Failed to load scene' }, { status: 500 });

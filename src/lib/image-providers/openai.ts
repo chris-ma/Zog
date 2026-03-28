@@ -1,16 +1,16 @@
 import OpenAI from 'openai';
 
-const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+let _client: OpenAI | null = null;
 
-/**
- * Generate an image using OpenAI DALL-E 3.
- * @param prompt  The image generation prompt
- * @returns       The URL of the generated image
- */
+function getClient(): OpenAI {
+  if (!_client) {
+    _client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY ?? 'missing' });
+  }
+  return _client;
+}
+
 export async function generateImage(prompt: string): Promise<string> {
-  const response = await client.images.generate({
+  const response = await getClient().images.generate({
     model: 'dall-e-3',
     prompt,
     n: 1,
@@ -19,7 +19,7 @@ export async function generateImage(prompt: string): Promise<string> {
     response_format: 'url',
   });
 
-  const url = response.data[0]?.url;
+  const url = (response.data ?? [])[0]?.url;
   if (!url) {
     throw new Error('OpenAI image generation returned no URL');
   }

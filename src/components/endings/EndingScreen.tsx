@@ -14,17 +14,25 @@ interface EndingScreenProps {
 }
 
 const BADGE_STYLES: Record<string, { bg: string; text: string }> = {
-  EPIC:    { bg: 'bg-yellow-500/20',  text: 'text-yellow-300'  },
-  GROSS:   { bg: 'bg-green-500/20',   text: 'text-green-300'   },
-  WEIRD:   { bg: 'bg-pink-500/20',    text: 'text-pink-300'    },
-  AWESOME: { bg: 'bg-blue-500/20',    text: 'text-blue-300'    },
-  SILLY:   { bg: 'bg-orange-500/20',  text: 'text-orange-300'  },
+  // Burp Quest
+  EPIC:      { bg: 'bg-yellow-500/20',  text: 'text-yellow-300'  },
+  GROSS:     { bg: 'bg-green-500/20',   text: 'text-green-300'   },
+  WEIRD:     { bg: 'bg-pink-500/20',    text: 'text-pink-300'    },
+  AWESOME:   { bg: 'bg-blue-500/20',    text: 'text-blue-300'    },
+  SILLY:     { bg: 'bg-orange-500/20',  text: 'text-orange-300'  },
+  // Double Life Drama
+  LEGENDARY: { bg: 'bg-yellow-400/20', text: 'text-yellow-200'  },
+  ICONIC:    { bg: 'bg-fuchsia-500/20', text: 'text-fuchsia-300' },
+  SWEET:     { bg: 'bg-rose-500/20',   text: 'text-rose-300'    },
+  MESSY:     { bg: 'bg-amber-500/20',  text: 'text-amber-300'   },
+  DRAMATIC:  { bg: 'bg-red-500/20',    text: 'text-red-300'     },
 };
 
 const DEFAULT_BADGE = { bg: 'bg-purple-500/20', text: 'text-purple-300' };
 
 const BADGE_EMOJIS: Record<string, string> = {
   EPIC: '⚔️', GROSS: '🤢', WEIRD: '🌀', AWESOME: '🌟', SILLY: '🤪',
+  LEGENDARY: '👑', ICONIC: '💅', SWEET: '💖', MESSY: '💥', DRAMATIC: '🎭',
 };
 
 export function EndingScreen({ storyId, endingType, nodeId, sessionId: _sessionId }: EndingScreenProps) {

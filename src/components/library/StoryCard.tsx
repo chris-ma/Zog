@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import Image from 'next/image';
+import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import type { Story } from '@/types/story';
 
@@ -20,6 +20,46 @@ const GENRE_COLORS: Record<string, string> = {
   adventure: 'bg-green-900/50 text-green-300',
 };
 
+function CoverImage({ src, alt }: { src: string; alt: string }) {
+  const [loaded, setLoaded] = useState(false);
+  const [errored, setErrored] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
+
+  // Handle images already in cache before React attaches onLoad
+  useEffect(() => {
+    if (imgRef.current?.complete && imgRef.current.naturalWidth > 0) {
+      setLoaded(true);
+    }
+  }, [src]);
+
+  if (errored) {
+    return (
+      <div className="absolute inset-0 bg-gradient-to-br from-gray-800 via-gray-900 to-black flex items-center justify-center">
+        <span className="text-5xl opacity-20">✦</span>
+      </div>
+    );
+  }
+
+  return (
+    <>
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        ref={imgRef}
+        src={src}
+        alt={alt}
+        onLoad={() => setLoaded(true)}
+        onError={() => setErrored(true)}
+        className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${
+          loaded ? 'opacity-100' : 'opacity-0'
+        }`}
+      />
+      {!loaded && (
+        <div className="absolute inset-0 bg-gradient-to-br from-gray-800 via-gray-900 to-black" />
+      )}
+    </>
+  );
+}
+
 export function StoryCard({ story }: StoryCardProps) {
   return (
     <Link href={`/story/${story.id}`}>
@@ -30,15 +70,9 @@ export function StoryCard({ story }: StoryCardProps) {
         className="rounded-xl border border-gray-700 overflow-hidden bg-gray-900/60 backdrop-blur-sm hover:border-gray-500 transition-colors cursor-pointer h-full flex flex-col"
       >
         {/* Cover Image */}
-        <div className="relative aspect-video bg-gray-800 flex-shrink-0">
+        <div className="relative aspect-video bg-gray-900 flex-shrink-0">
           {story.coverImageUrl ? (
-            <Image
-              src={story.coverImageUrl}
-              alt={story.title}
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 400px"
-            />
+            <CoverImage src={story.coverImageUrl} alt={story.title} />
           ) : (
             <div className="absolute inset-0 bg-gradient-to-br from-gray-800 via-gray-900 to-black flex items-center justify-center">
               <span className="text-5xl opacity-20">✦</span>

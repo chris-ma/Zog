@@ -10,7 +10,7 @@
   "artStyle": "dark fantasy oil painting, dramatic chiaroscuro lighting, rich jewel tones",
   "mood": "foreboding",
   "estimatedMinutes": 15,
-  "coverImageUrl": null,
+  "coverImageUrl": "/illustrations/hollow-king-cover.svg",
   "rootNodeId": "node-throne-room",
   "isDynamic": false,
   "theme": {

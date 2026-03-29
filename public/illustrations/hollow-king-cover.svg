@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="450" viewBox="0 0 800 450">
+  
+      <defs>
+        <radialGradient id="bg" cx="50%" cy="40%" r="70%">
+          <stop offset="0%" stop-color="#001a0f"/>
+          <stop offset="100%" stop-color="#000a05"/>
+        </radialGradient>
+        <radialGradient id="glow" cx="50%" cy="35%" r="35%">
+          <stop offset="0%" stop-color="#10b981" stop-opacity="0.2"/>
+          <stop offset="100%" stop-color="#000a05" stop-opacity="0"/>
+        </radialGradient>
+        <linearGradient id="titleFade" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#000" stop-opacity="0"/>
+          <stop offset="100%" stop-color="#000" stop-opacity="0.75"/>
+        </linearGradient>
+      </defs>
+      <rect width="800" height="450" fill="url(#bg)"/>
+      <rect width="800" height="450" fill="url(#glow)"/>
+
+      <!-- Distant stars (fewer, dimmer for dark fantasy) -->
+      <circle cx="707.8" cy="227.7" r="1.1" fill="white" opacity="0.72"/><circle cx="742.1" cy="269.9" r="2.1" fill="white" opacity="0.57"/><circle cx="674.0" cy="315.4" r="2.4" fill="white" opacity="0.68"/><circle cx="263.2" cy="247.0" r="1.1" fill="white" opacity="0.61"/><circle cx="308.6" cy="229.4" r="0.8" fill="white" opacity="0.52"/><circle cx="596.0" cy="143.8" r="1.4" fill="white" opacity="0.87"/><circle cx="202.8" cy="283.5" r="1.7" fill="white" opacity="0.50"/><circle cx="172.2" cy="252.0" r="2.3" fill="white" opacity="0.73"/><circle cx="769.6" cy="316.3" r="1.1" fill="white" opacity="0.64"/><circle cx="133.2" cy="133.8" r="2.0" fill="white" opacity="0.86"/><circle cx="532.3" cy="229.7" r="2.3" fill="white" opacity="0.41"/><circle cx="644.2" cy="17.9" r="2.2" fill="white" opacity="0.47"/><circle cx="464.0" cy="218.3" r="1.9" fill="white" opacity="0.53"/><circle cx="58.4" cy="87.2" r="0.6" fill="white" opacity="0.53"/><circle cx="776.6" cy="239.8" r="2.5" fill="white" opacity="0.63"/><circle cx="130.9" cy="356.4" r="0.6" fill="white" opacity="0.81"/><circle cx="559.5" cy="75.3" r="2.3" fill="white" opacity="0.85"/><circle cx="483.1" cy="240.3" r="1.4" fill="white" opacity="0.47"/><circle cx="269.3" cy="430.4" r="1.1" fill="white" opacity="0.43"/><circle cx="716.3" cy="63.4" r="2.0" fill="white" opacity="0.30"/><circle cx="668.4" cy="127.7" r="1.7" fill="white" opacity="0.33"/><circle cx="576.1" cy="8.9" r="2.0" fill="white" opacity="0.63"/><circle cx="613.9" cy="188.8" r="2.0" fill="white" opacity="0.36"/><circle cx="566.3" cy="109.7" r="1.4" fill="white" opacity="0.39"/><circle cx="97.2" cy="407.4" r="0.8" fill="white" opacity="0.44"/><circle cx="613.0" cy="378.9" r="1.9" fill="white" opacity="0.76"/><circle cx="532.9" cy="113.7" r="2.1" fill="white" opacity="0.42"/><circle cx="778.8" cy="181.6" r="0.7" fill="white" opacity="0.44"/><circle cx="697.5" cy="428.1" r="1.2" fill="white" opacity="0.54"/><circle cx="26.6" cy="447.0" r="2.4" fill="white" opacity="0.89"/><circle cx="318.7" cy="356.5" r="1.3" fill="white" opacity="0.47"/><circle cx="233.9" cy="171.5" r="0.7" fill="white" opacity="0.69"/><circle cx="114.8" cy="225.9" r="1.7" fill="white" opacity="0.71"/><circle cx="256.6" cy="261.5" r="0.8" fill="white" opacity="0.65"/><circle cx="683.2" cy="310.9" r="0.8" fill="white" opacity="0.78"/>
+
+      <!-- Throne silhouette -->
+      <!-- seat -->
+      <rect x="310" y="260" width="180" height="130" rx="4" fill="#6d28d9" opacity="0.25"/>
+      <!-- back -->
+      <rect x="320" y="120" width="160" height="155" rx="4" fill="#6d28d9" opacity="0.3"/>
+      <!-- armrests -->
+      <rect x="280" y="220" width="50" height="20" rx="3" fill="#6d28d9" opacity="0.25"/>
+      <rect x="470" y="220" width="50" height="20" rx="3" fill="#6d28d9" opacity="0.25"/>
+      <!-- crown spires on top of throne -->
+      <polygon points="340,120 355,80 370,120" fill="#d4af37" opacity="0.5"/>
+      <polygon points="385,120 400,65 415,120" fill="#d4af37" opacity="0.6"/>
+      <polygon points="430,120 445,80 460,120" fill="#d4af37" opacity="0.5"/>
+
+      <!-- Crown above throne -->
+      <polygon points="350,105 370,60 390,95 410,55 430,95 450,60 470,105" fill="#d4af37" opacity="0.7"/>
+      <circle cx="370" cy="62" r="6" fill="#10b981" opacity="0.9"/>
+      <circle cx="410" cy="57" r="8" fill="#10b981" opacity="0.9"/>
+      <circle cx="450" cy="62" r="6" fill="#10b981" opacity="0.9"/>
+
+      <!-- Eerie green mist at base -->
+      <ellipse cx="400" cy="390" rx="300" ry="60" fill="#10b981" opacity="0.08"/>
+      <ellipse cx="400" cy="420" rx="350" ry="50" fill="#10b981" opacity="0.06"/>
+
+      <text x="57" y="312" font-size="13" fill="#d4af37" opacity="1.00" text-anchor="middle">✦</text><text x="246" y="62" font-size="22" fill="#d4af37" opacity="0.47" text-anchor="middle">✦</text><text x="400" y="73" font-size="21" fill="#d4af37" opacity="0.36" text-anchor="middle">✦</text><text x="22" y="112" font-size="13" fill="#d4af37" opacity="0.73" text-anchor="middle">✦</text><text x="17" y="434" font-size="12" fill="#d4af37" opacity="0.91" text-anchor="middle">✦</text><text x="455" y="65" font-size="12" fill="#d4af37" opacity="0.39" text-anchor="middle">✦</text><text x="73" y="410" font-size="10" fill="#d4af37" opacity="0.94" text-anchor="middle">✦</text><text x="393" y="284" font-size="9" fill="#d4af37" opacity="0.91" text-anchor="middle">✦</text><text x="626" y="124" font-size="9" fill="#d4af37" opacity="0.82" text-anchor="middle">✦</text><text x="492" y="421" font-size="9" fill="#d4af37" opacity="0.32" text-anchor="middle">✦</text>
+
+      <rect width="800" height="450" fill="url(#titleFade)"/>
+    
+</svg>

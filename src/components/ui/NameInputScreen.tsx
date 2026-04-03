@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useRef, useEffect } from 'react';
+import gsap from 'gsap';
 import { usePlayer } from '@/context/PlayerContext';
 
 interface NameInputScreenProps {
@@ -13,6 +13,18 @@ export function NameInputScreen({ storyTitle, onReady }: NameInputScreenProps) {
   const { setPlayerName } = usePlayer();
   const [inputValue, setInputValue] = useState('');
   const [error, setError] = useState('');
+  const containerRef = useRef<HTMLDivElement>(null);
+  const btnRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    gsap.fromTo(
+      el.children,
+      { opacity: 0, y: 32 },
+      { opacity: 1, y: 0, duration: 0.6, stagger: 0.12, ease: 'power3.out' },
+    );
+  }, []);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,12 +44,7 @@ export function NameInputScreen({ storyTitle, onReady }: NameInputScreenProps) {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-[#0d0d1a]">
       {/* DM speech bubble intro */}
-      <motion.div
-        initial={{ opacity: 0, y: 24 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="w-full max-w-xl space-y-8"
-      >
+      <div className="w-full max-w-xl space-y-8" ref={containerRef}>
         {/* DM character + bubble */}
         <div className="flex items-start gap-4">
           <DMAvatarSmall />
@@ -71,15 +78,19 @@ export function NameInputScreen({ storyTitle, onReady }: NameInputScreenProps) {
           {error && (
             <p className="text-red-400 text-sm text-center">{error}</p>
           )}
-          <motion.button
+          <button
+            ref={btnRef}
             type="submit"
-            whileTap={{ scale: 0.97 }}
+            onMouseEnter={() => gsap.to(btnRef.current, { scale: 1.03, duration: 0.2, ease: 'power2.out' })}
+            onMouseLeave={() => gsap.to(btnRef.current, { scale: 1, duration: 0.2, ease: 'power2.out' })}
+            onMouseDown={() => gsap.to(btnRef.current, { scale: 0.97, duration: 0.1 })}
+            onMouseUp={() => gsap.to(btnRef.current, { scale: 1.03, duration: 0.1 })}
             className="w-full rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-lg py-4 transition-colors"
           >
             Begin the Adventure →
-          </motion.button>
+          </button>
         </form>
-      </motion.div>
+      </div>
     </div>
   );
 }

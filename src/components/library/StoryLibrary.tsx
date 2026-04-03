@@ -1,7 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { useEffect, useState, useRef } from 'react';
+import gsap from 'gsap';
 import type { Story } from '@/types/story';
 import { StoryCard } from '@/components/library/StoryCard';
 
@@ -9,6 +9,8 @@ export function StoryLibrary() {
   const [stories, setStories] = useState<Story[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const headerRef = useRef<HTMLElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     fetch('/api/story')
@@ -21,30 +23,49 @@ export function StoryLibrary() {
       .finally(() => setIsLoading(false));
   }, []);
 
+  // Animate header on mount
+  useEffect(() => {
+    const el = headerRef.current;
+    if (!el) return;
+    const children = el.querySelectorAll('[data-gsap]');
+    gsap.fromTo(
+      children,
+      { opacity: 0, y: -24 },
+      { opacity: 1, y: 0, duration: 0.7, stagger: 0.15, ease: 'power3.out' },
+    );
+  }, []);
+
+  // Stagger cards in once stories load
+  useEffect(() => {
+    if (!stories.length || !gridRef.current) return;
+    const cards = gridRef.current.querySelectorAll('[data-card]');
+    gsap.fromTo(
+      cards,
+      { opacity: 0, y: 40, scale: 0.95 },
+      { opacity: 1, y: 0, scale: 1, duration: 0.55, stagger: 0.1, ease: 'power3.out', delay: 0.1 },
+    );
+  }, [stories]);
+
   return (
     <div className="min-h-screen p-8">
       <div className="max-w-6xl mx-auto space-y-10">
         {/* Header */}
-        <header className="text-center space-y-4 py-8">
-          <motion.h1
-            initial={{ opacity: 0, y: -16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="text-5xl font-cinzel font-bold"
+        <header ref={headerRef} className="text-center space-y-4 py-8">
+          <h1
+            data-gsap
+            className="text-5xl font-cinzel font-bold opacity-0"
           >
             Choose Your Adventure
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.2, duration: 0.5 }}
-            className="text-lg text-gray-400 font-crimson max-w-xl mx-auto"
+          </h1>
+          <p
+            data-gsap
+            className="text-lg text-gray-400 font-crimson max-w-xl mx-auto opacity-0"
           >
             Every choice shapes your destiny. Select a story to begin your journey.
-          </motion.p>
+          </p>
         </header>
 
-        {/* Story Grid */}
+        {/* Loading skeletons */}
         {isLoading && (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {Array.from({ length: 6 }).map((_, i) => (
@@ -75,23 +96,21 @@ export function StoryLibrary() {
         {!isLoading && !error && stories.length === 0 && (
           <div className="text-center py-16 space-y-4">
             <p className="text-gray-400 font-cinzel text-xl">No stories yet.</p>
-            <p className="text-gray-600 font-crimson">
-              Adventures are being written. Check back soon.
-            </p>
+            <p className="text-gray-600 font-crimson">Adventures are being written. Check back soon.</p>
           </div>
         )}
 
         {!isLoading && !error && stories.length > 0 && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3, duration: 0.5 }}
+          <div
+            ref={gridRef}
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
           >
             {stories.map((story) => (
-              <StoryCard key={story.id} story={story} />
+              <div key={story.id} data-card>
+                <StoryCard story={story} />
+              </div>
             ))}
-          </motion.div>
+          </div>
         )}
       </div>
     </div>

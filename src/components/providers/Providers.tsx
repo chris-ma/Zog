@@ -2,6 +2,7 @@
 
 import { SessionProvider } from 'next-auth/react';
 import { PlayerContextProvider } from '@/context/PlayerContext';
+import { TransitionProvider } from '@/context/TransitionContext';
 
 interface ProvidersProps {
   children: React.ReactNode;
@@ -10,7 +11,9 @@ interface ProvidersProps {
 export function Providers({ children }: ProvidersProps) {
   return (
     <SessionProvider>
-      <PlayerContextProvider>{children}</PlayerContextProvider>
+      <PlayerContextProvider>
+        <TransitionProvider>{children}</TransitionProvider>
+      </PlayerContextProvider>
     </SessionProvider>
   );
 }

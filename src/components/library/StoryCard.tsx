@@ -1,8 +1,8 @@
 'use client';
 
-import Link from 'next/link';
 import { useState, useRef, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import gsap from 'gsap';
+import { TransitionLink } from '@/components/ui/TransitionLink';
 import type { Story } from '@/types/story';
 
 interface StoryCardProps {
@@ -61,13 +61,30 @@ function CoverImage({ src, alt }: { src: string; alt: string }) {
 }
 
 export function StoryCard({ story }: StoryCardProps) {
+  const cardRef = useRef<HTMLElement>(null);
+
+  const handleMouseEnter = () => {
+    gsap.to(cardRef.current, { y: -6, scale: 1.02, duration: 0.25, ease: 'power2.out' });
+    gsap.to(cardRef.current, { borderColor: 'rgba(156,163,175,0.6)', duration: 0.2 });
+  };
+  const handleMouseLeave = () => {
+    gsap.to(cardRef.current, { y: 0, scale: 1, duration: 0.35, ease: 'power2.out' });
+    gsap.to(cardRef.current, { borderColor: 'rgba(55,65,81,1)', duration: 0.3 });
+  };
+  const handleMouseDown = () => gsap.to(cardRef.current, { scale: 0.97, duration: 0.1 });
+  const handleMouseUp = () => gsap.to(cardRef.current, { scale: 1.02, duration: 0.1 });
+
   return (
-    <Link href={`/story/${story.id}`}>
-      <motion.article
-        whileHover={{ y: -4, scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
-        transition={{ duration: 0.2 }}
-        className="rounded-xl border border-gray-700 overflow-hidden bg-gray-900/60 backdrop-blur-sm hover:border-gray-500 transition-colors cursor-pointer h-full flex flex-col"
+    <TransitionLink href={`/story/${story.id}`}>
+      <article
+        ref={cardRef}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={handleMouseLeave}
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
+        onTouchStart={handleMouseDown}
+        onTouchEnd={handleMouseLeave}
+        className="rounded-xl border border-gray-700 overflow-hidden bg-gray-900/60 backdrop-blur-sm cursor-pointer h-full flex flex-col"
       >
         {/* Cover Image */}
         <div className="relative aspect-video bg-gray-900 flex-shrink-0">
@@ -105,7 +122,7 @@ export function StoryCard({ story }: StoryCardProps) {
             <span className="capitalize">{story.mood}</span>
           </div>
         </div>
-      </motion.article>
-    </Link>
+      </article>
+    </TransitionLink>
   );
 }
